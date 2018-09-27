@@ -56,12 +56,16 @@
                 <button class="btn btn-primary" @click="addItem">Add Item</button>
                 <br><br>
                 <ul class="list-group">
-                    <li 
-                        class="list-group-item" 
-                        v-for="(number,index) in numbers" 
-                        :key="index"
-                        @click="removeItem(index)"
-                        style="cursor: pointer">{{ number }}</li>
+                    <transition-group name="slide">
+                      <li 
+                          class="list-group-item" 
+                          v-for="(number,index) in numbers" 
+                          :key="index"
+                          @click="removeItem(index)"
+                          style="cursor: pointer">
+                          {{ number }}
+                      </li>
+                    </transition-group>
                 </ul>
             </div>
         </div>
@@ -69,136 +73,146 @@
 </template>
 
 <script>
-    import DangerAlert from './DangerAlert.vue';
-    import SuccessAlert from './SuccessAlert.vue';
+import DangerAlert from "./DangerAlert.vue";
+import SuccessAlert from "./SuccessAlert.vue";
 
-    export default {
-        data() {
-            return {
-                show: false,
-                load: true,
-                alertAnimation: 'fade',
-                elementWidth: 100,
-                selectedComponent: 'app-success',
-                numbers: [1,2,3,4,5]
-            }
-        },
-        methods: {
-            beforeEnter(el) {
-                console.log('Before Enter');
-                this.elementWidth = 100;
-                el.style.width = this.elementWidth + 'px';
-            },
-            enter(el, done) {
-                console.log('Enter');
-                let round = 1;
-                const interval = setInterval(() => {
-                    el.style.width = (this.elementWidth + round * 10) + 'px';
-                    round++;
-                    if(round > 20) {
-                        clearInterval(interval);
-                        done();
-                    }
-                }, 20);
-            },
-            afterEnter(el) {
-                console.log('After Enter');
-            },
-            enterCancelled(el) {
-                console.log('Enter Cancelled');
-            },
-            beforeLeave(el) {
-                console.log('Before Leave');
-                this.elementWidth = 300;
-                el.style.width = this.elementWidth + 'px';
-            },
-            leave(el, done) {
-                console.log('leave');
-                let round = 1;
-                const interval = setInterval(() => {
-                    el.style.width = (this.elementWidth - round * 10) + 'px';
-                    round++;
-                    if(round > 20) {
-                        clearInterval(interval);
-                        done();
-                    }
-                }, 20);
-            },
-            afterLeave(el) {
-                console.log('After Leave');
-            },
-            leaveCancelled(el) {
-                console.log('Leave Cancelled');
-            },
-            addItem() {
-                let length = this.numbers.length - 1;
-                let previous = this.numbers[length];
-                this.numbers.push(previous + 1);
-            },
-            removeItem(index) {
-                this.numbers.splice(index,1);
-            }
-        },
-        components: {
-            appDanger: DangerAlert,
-            appSuccess: SuccessAlert
+export default {
+  data() {
+    return {
+      show: false,
+      load: true,
+      alertAnimation: "fade",
+      elementWidth: 100,
+      selectedComponent: "app-success",
+      numbers: [1, 2, 3, 4, 5]
+    };
+  },
+  methods: {
+    beforeEnter(el) {
+      console.log("Before Enter");
+      this.elementWidth = 100;
+      el.style.width = this.elementWidth + "px";
+    },
+    enter(el, done) {
+      console.log("Enter");
+      let round = 1;
+      const interval = setInterval(() => {
+        el.style.width = this.elementWidth + round * 10 + "px";
+        round++;
+        if (round > 20) {
+          clearInterval(interval);
+          done();
         }
+      }, 20);
+    },
+    afterEnter(el) {
+      console.log("After Enter");
+    },
+    enterCancelled(el) {
+      console.log("Enter Cancelled");
+    },
+    beforeLeave(el) {
+      console.log("Before Leave");
+      this.elementWidth = 300;
+      el.style.width = this.elementWidth + "px";
+    },
+    leave(el, done) {
+      console.log("leave");
+      let round = 1;
+      const interval = setInterval(() => {
+        el.style.width = this.elementWidth - round * 10 + "px";
+        round++;
+        if (round > 20) {
+          clearInterval(interval);
+          done();
+        }
+      }, 20);
+    },
+    afterLeave(el) {
+      console.log("After Leave");
+    },
+    leaveCancelled(el) {
+      console.log("Leave Cancelled");
+    },
+    addItem() {
+      if (this.numbers.length > 0) {
+        let length = this.numbers.length - 1;
+        let previous = this.numbers[length];
+        this.numbers.push(previous + 1);
+      } else {
+        let previous = 0;
+        this.numbers.push(previous + 1);
+      }
+    },
+    removeItem(index) {
+      this.numbers.splice(index, 1);
     }
+  },
+  components: {
+    appDanger: DangerAlert,
+    appSuccess: SuccessAlert
+  }
+};
 </script>
 
 <style>
-    .fade-enter {
-        opacity: 0;
-    }
+.fade-enter {
+  opacity: 0;
+}
 
-    .fade-enter-active {
-        transition: opacity 1s;
-    }
+.fade-enter-active {
+  transition: opacity 1s;
+}
 
-    /* .fade-leave {
+/* .fade-leave {
         opacity: 1;
     } */
 
-    .fade-leave-active {
-        transition: opacity 1s;
-        opacity: 0;
-    }
+.fade-leave-active {
+  transition: opacity 1s;
+  opacity: 0;
+}
 
-    .slide-enter {
-        opacity: 0;
-        /* transform: translateY(20px); */
-    }
+.slide-enter {
+  opacity: 0;
+  /* transform: translateY(20px); */
+}
 
-    .slide-enter-active {
-        animation: slide-in 1s ease-out forwards;
-        transition: opacity .5s;
-    }
+.slide-enter-active {
+  animation: slide-in 1s ease-out forwards;
+  transition: opacity 0.5s;
+}
 
-    /* .slide-leave {
+/* .slide-leave {
 
     } */
 
-    .slide-leave-active {
-        animation: slide-out 1s ease-out forwards;
-        transition: opacity 1s;
-        opacity: 0;
-    }
+.slide-leave-active {
+  animation: slide-out 1s ease-out forwards;
+  transition: opacity 1s;
+  opacity: 0;
+  position: absolute;
+}
 
-    @keyframes slide-in {
-        from {
-            transform: translateY(20px);
-        }
-        to {
-            transform: translateY(0);
-        }
-    }
+.slide-move {
+  transition: transform 1s;
+}
 
-    @keyframes slide-out {
-        from {
-            transform: translateY(0);
-        }
-        to {
-            transform: translateY(20px);
-        }
-    }
+@keyframes slide-in {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(20px);
+  }
+}
 </style>
