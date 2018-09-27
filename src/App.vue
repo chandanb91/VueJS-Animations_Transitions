@@ -12,7 +12,10 @@
                 <transition name="slide" type="animation">
                     <div class="alert alert-info" v-if="show">Some alert info</div>
                 </transition>
-                <transition name="fade" appear>
+                <transition 
+                        appear
+                        enter-active-class="animated bounce"
+                        leave-active-class="animated shake">
                     <div class="alert alert-info" v-if="show">Some alert info</div>
                 </transition>
             </div>
@@ -39,9 +42,9 @@
         transition: opacity 1s;
     }
 
-    .fade-leave {
-        /* opacity: 1; */
-    }
+    /* .fade-leave {
+        opacity: 1;
+    } */
 
     .fade-leave-active {
         transition: opacity 1s;
@@ -58,9 +61,9 @@
         transition: opacity .5s;
     }
 
-    .slide-leave {
+    /* .slide-leave {
 
-    }
+    } */
 
     .slide-leave-active {
         animation: slide-out 1s ease-out forwards;
